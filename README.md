@@ -64,9 +64,9 @@
 Выполните миграции, создайте суперпользователя, соберите статику:
 
 ```
-* docker-compose exec web python manage.py migrate
-* docker-compose exec web python manage.py createsuperuser
-* docker-compose exec web python manage.py collectstatic --no-input
+* docker-compose exec backend python manage.py migrate
+* docker-compose exec backend python manage.py createsuperuser
+* docker-compose exec backend python manage.py collectstatic --no-input
 ```
 
 
@@ -84,7 +84,6 @@ http://51.250.109.244/recipes
 ### Автор проекта Foodgram:
 Бек Антон
 https://github.com/hulkluck/
-
 
 ### License
 * MIT @ Anton Bek
