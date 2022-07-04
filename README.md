@@ -77,13 +77,13 @@
 ```
 
 ## Приложение работает по ссылкам:
-http://51.250.109.244/admin/
-http://51.250.109.244/recipes
+* http://51.250.109.244/admin/
+* http://51.250.109.244/recipes
 
 
 ### Автор проекта Foodgram:
-Бек Антон
-https://github.com/hulkluck/
+* Бек Антон
+* https://github.com/hulkluck/
 
 
 ### License
