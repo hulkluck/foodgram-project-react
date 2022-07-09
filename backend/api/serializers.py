@@ -135,7 +135,7 @@ class RecipesCount(metaclass=serializers.SerializerMetaclass):
     Класс определения количества рецептов автора.
     """
     recipe_count = serializers.IntegerField(
-        source='author.count', 
+        source='author.count',
         read_only=True
     )
 
