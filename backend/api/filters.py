@@ -1,7 +1,7 @@
 from distutils.util import strtobool
 
 import django_filters
-from recipes.models import Favorite, Recipe, ShoppingCart
+from recipes.models import Recipe
 from rest_framework import filters
 
 CHOICES = (
