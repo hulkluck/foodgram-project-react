@@ -3,16 +3,15 @@ from http import HTTPStatus
 from django.db import IntegrityError
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
-
 from django_filters.rest_framework import DjangoFilterBackend
-from recipes.models import (Favorite, Ingredient, IngredientInRecipe, Recipe,
-                            ShoppingCart, Tag)
 
 from rest_framework import permissions, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from users.models import Subscribe, User
 
+from users.models import Subscribe, User
+from recipes.models import (Favorite, Ingredient, IngredientInRecipe, Recipe,
+                            ShoppingCart, Tag)
 from .filters import IngredientFilter, RecipeFilter
 from .pagination import CustomPagination
 from .permissions import IsAuthorOrReadOnly
@@ -42,7 +41,7 @@ class SubscribeViewSet(viewsets.ModelViewSet):
     pagination_class = CustomPagination
 
     def get_queryset(self):
-        return Subscribe.objects.filter(user=self.request.user)
+        return Subscribe.objects.filter(follower__user=self.request.user)
 
     def create(self, request, *args, **kwargs):
         """
@@ -89,10 +88,10 @@ class RecipeViewSet(viewsets.ModelViewSet):
     Обработка моделей рецептов.
     """
     queryset = Recipe.objects.all()
-    permission_classes = (IsAuthorOrReadOnly, )
+    permission_classes = [IsAuthorOrReadOnly, ]
     serializer_class = RecipeSerializer
     filter_class = RecipeFilter
-    filter_backends = (DjangoFilterBackend, )
+    filter_backends = [DjangoFilterBackend]
     pagination_class = CustomPagination
 
     def get_serializer_class(self):
@@ -118,7 +117,7 @@ class IngredientViewSet(ListRetriveViewSet):
     permission_classes = [permissions.AllowAny, ]
     serializer_class = IngredientSerializer
     pagination_class = None
-    filter_backends = (DjangoFilterBackend, IngredientFilter)
+    filter_backends = (IngredientFilter,)
     search_fields = ['^name', ]
 
 

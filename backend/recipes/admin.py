@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from users.models import Subscribe, User
-
+from .forms import RecipeFormset
 from .models import (Favorite, Ingredient, IngredientInRecipe, Recipe,
                      ShoppingCart, Tag, TagRecipe)
 
@@ -25,12 +25,13 @@ class IngredientAdmin(admin.ModelAdmin):
 
 class TagRecipeInLine(admin.TabularInline):
     model = TagRecipe
-    extra = 0
+    extra = 1
 
 
 class IngredientInRecipeInLine(admin.TabularInline):
     model = IngredientInRecipe
-    extra = 0
+    formset = RecipeFormset
+    extra = 1
 
 
 class RecipeAdmin(admin.ModelAdmin):
