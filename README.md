@@ -84,7 +84,6 @@
 * root@root.ru
 * 1234
 
-
 ### Автор проекта Foodgram:
 * Бек Антон
 * https://github.com/hulkluck/
