@@ -1,5 +1,4 @@
 from django.contrib.auth.hashers import make_password
-
 from rest_framework import serializers
 
 from recipes.models import (Favorite, Ingredient, IngredientInRecipe, Recipe,
@@ -110,24 +109,21 @@ class ShoppingCartFavoriteRecipes(metaclass=serializers.SerializerMetaclass):
         )
 
     def validate_ingredients(self, value):
-        ingredients = self.initial_data.get('ingredients')
-        if not ingredients:
-            raise serializers.ValidationError({
-                'Нужно выбрать хотя бы один ингредиент!'
-            })
         ingredients_list = []
+        ingredients = value
         for ingredient in ingredients:
-            ingredient_id = ingredient['id']
-            if ingredient_id in ingredients_list:
-                raise serializers.ValidationError({
-                    'Ингридиенты повторяются!'
-                })
-            ingredients_list.append(ingredient_id)
-            amount = ingredient['amount']
-            if int(amount) <= 0:
-                raise serializers.ValidationError({
-                    'Укажите хотя бы один ингридиент!'
-                })
+            if ingredient['amount'] < 1:
+                raise serializers.ValidationError(
+                    'Количество должно быть равным или больше 1!')
+            check_id = ingredient['ingredient']['id']
+            check_ingredient = Ingredient.objects.filter(id=check_id)
+            if not check_ingredient.exists():
+                raise serializers.ValidationError(
+                    'Ингредиента нет в базе!')
+            if check_ingredient in ingredients_list:
+                raise serializers.ValidationError(
+                    'Продукты не должны повторяться!')
+            ingredients_list.append(check_ingredient)
         return value
 
 
@@ -135,10 +131,12 @@ class RecipesCount(metaclass=serializers.SerializerMetaclass):
     """
     Класс определения количества рецептов автора.
     """
-    recipe_count = serializers.IntegerField(
-        source='author.count',
-        read_only=True
-    )
+
+    def get_recipes_count(self, obj):
+        """
+        Функция подсчёта количества рецептов автора.
+        """
+        return Recipe.objects.filter(author=obj.author).count()
 
 
 class FavoriteSerializer(serializers.ModelSerializer):
@@ -237,8 +235,9 @@ class RecipeSerializerPost(serializers.ModelSerializer,
         """
         Функция добавления тегов и продуктов в рецепт.
         """
-        recipe.tags.clear()
-        recipe.tags.set(tags)
+        for tag in tags:
+            recipe.tags.add(tag)
+            recipe.save()
         for ingredient in ingredients:
             if not IngredientInRecipe.objects.filter(
                     ingredient_id=ingredient['ingredient']['id'],
