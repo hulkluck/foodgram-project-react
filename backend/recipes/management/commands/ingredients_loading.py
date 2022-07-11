@@ -9,6 +9,7 @@ from recipes.models import Ingredient
 
 DATA_ROOT = os.path.join(settings.BASE_DIR, 'data')
 
+
 class Command(BaseCommand):
     help = 'loading ingredients from data in json'
 
